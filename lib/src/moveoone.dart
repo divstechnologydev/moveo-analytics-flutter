@@ -174,7 +174,7 @@ class MoveoOne {
       final response = await http.post(
         Uri.parse(apiEndpoint),
         headers: {
-          'Authorization': 'Bearer $_token',
+          'Authorization': '$_token',
           'Content-Type': 'application/json',
         },
         body: jsonEncode(data.map((e) => e.toJson()).toList()),
