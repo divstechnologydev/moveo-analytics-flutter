@@ -8,6 +8,8 @@ void main() {
   // Initialize MoveoOne before running the app
   MoveoOne().initialize("your_api_key");
 
+  MoveoOne().start("contenxt");
+
   runApp(const MyApp());
 }
 

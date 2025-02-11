@@ -56,6 +56,10 @@ import 'package:moveoone_flutter/moveo_one.dart';
 void main() {
   MoveoOne().initialize("your_api_key");
 
+  // Starts the tracking session - optionally, place it to another place to start tracking
+  // !!! but importantly prior to first track/tick event !!!
+  MoveoOne().initialize("your_context_eg_onboarding-app-settings");
+
   runApp(const MyApp());
 }
 ```
