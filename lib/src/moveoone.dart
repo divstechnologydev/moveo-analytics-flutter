@@ -171,13 +171,16 @@ class MoveoOne {
   // Send data to API endpoint
   Future<void> _sendData(List<MoveoOneEntity> data) async {
     try {
+      final events = data.map((e) => e.toJson()).toList();
+      final body = jsonEncode({"events": events});
+
       final response = await http.post(
         Uri.parse(apiEndpoint),
         headers: {
-          'Authorization': '$_token',
+          'Authorization': _token,
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(data.map((e) => e.toJson()).toList()),
+        body: body,
       );
 
       if (response.statusCode == 200) {
