@@ -1,6 +1,6 @@
 # example
 
-A simple Flutter project.
+A simple Flutter project used for demonstrating integration with moveo one.
 
 ## Getting Started
 
