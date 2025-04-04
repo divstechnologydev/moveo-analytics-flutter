@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
+import 'second_screen.dart'; // Import the new second screen
 
 void main() {
-
   runApp(const MyApp());
 }
 
@@ -35,15 +34,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
   }
 
   void _handleButtonPress(String buttonName) {
     print('Button pressed: $buttonName');
+    // Navigate to the second screen when a button is pressed.
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SecondScreen()),
+    );
   }
 
   void _handleInputEnd() {
-
+    // Handle input end if needed.
   }
 
   @override
@@ -63,10 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 40),
             Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.85,
+              width: MediaQuery.of(context).size.width * 0.85,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
@@ -125,8 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ? const Color(0xFF2B6CB0)
             : const Color(0xFF4299E1),
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 28),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       onPressed: () => _handleButtonPress(text),
       child: Text(
