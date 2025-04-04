@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:moveoone_flutter/moveoone_flutter.dart';
-import 'package:moveoone_flutter/src/constants.dart';
-import 'package:moveoone_flutter/src/moveo_one_data.dart';
 import 'package:flutter/material.dart';
-import 'package:moveoone_flutter/moveoone_flutter.dart';
 
 void main() {
-  MoveoOne().initialize("your_api_key");
-  MoveoOne().start("main_screen"); // Must be called before any track/tick
+
   runApp(const MyApp());
 }
 
@@ -40,61 +35,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    MoveoOne().identify("demo_user_123");
 
-    // Track paragraph impression with metadata in tick
-    MoveoOne().tick(
-      MoveoOneData(
-        semanticGroup: "content_interactions",
-        id: "intro_paragraph",
-        type: MoveoOneType.text,
-        // Using correct type
-        action: MoveoOneAction.view,
-        value: "demo_description",
-        metadata: {
-          "screen": "main_screen",
-          "interaction_type": "impression",
-          "app_version": "1.0.0",
-          "platform": "mobile",
-        },
-      ),
-    );
   }
 
   void _handleButtonPress(String buttonName) {
-    MoveoOne().track(
-      "main_screen",
-      MoveoOneData(
-        semanticGroup: "user_interactions",
-        id: "main_button",
-        type: MoveoOneType.button,
-        action: MoveoOneAction.click,
-        value: "primary_action",
-        metadata: {
-          "source": "home_screen",
-          "button": buttonName,
-        },
-      ),
-    );
+    print('Button pressed: $buttonName');
   }
 
   void _handleInputEnd() {
-    MoveoOne().track(
-      "main_screen",
-      MoveoOneData(
-        semanticGroup: "user_interactions",
-        id: "main_input",
-        type: MoveoOneType.text,
-        // Using text type for input
-        action: MoveoOneAction.edit,
-        value: "text_entered",
-        metadata: {
-          "source": "home_screen",
-          "input_length": _inputController.text.length.toString(),
-          // Convert to string
-        },
-      ),
-    );
+
   }
 
   @override
