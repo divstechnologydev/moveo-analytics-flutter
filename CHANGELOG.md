@@ -1,3 +1,6 @@
+## 0.0.4
+Metadata param added to start session method
+
 ## 0.0.3
 Demo project and api request fix added
 
