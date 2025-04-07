@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:moveoone_flutter/moveoone_flutter.dart';
+import 'package:moveoone_flutter/src/constants.dart';
+import 'package:moveoone_flutter/src/moveo_one_data.dart';
 import 'second_screen.dart'; // Import the new second screen
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize MoveoOne with API token
+  MoveoOne().initialize("YOUR_SDK_TOKEN");
+
+  // Start a tracking session before any tracking event
+  MoveoOne().start("app_launch", metadata: {"version": "1.0", "locale": "en"});
+
   runApp(const MyApp());
 }
 
@@ -34,10 +45,22 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    MoveoOne().start("home_screen", metadata: {"version": "1.0.0", "abTest": "variant_a"});
   }
 
   void _handleButtonPress(String buttonName) {
     print('Button pressed: $buttonName');
+    MoveoOne().track(
+      "home_screen",
+      MoveoOneData(
+        semanticGroup: "home_screen_buttons",
+        id: "button_$buttonName",
+        type: MoveoOneType.button,
+        action: MoveoOneAction.click,
+        value: buttonName,
+        metadata: {"button_name": buttonName},
+      ),
+    );
     // Navigate to the second screen when a button is pressed.
     Navigator.push(
       context,
@@ -46,7 +69,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _handleInputEnd() {
-    // Handle input end if needed.
+    MoveoOne().track(
+      "home_screen",
+      MoveoOneData(
+        semanticGroup: "home_screen_input",
+        id: "input_field",
+        type: MoveoOneType.textEdit,
+        action: MoveoOneAction.submit,
+        value: _inputController.text,
+        metadata: {"input_value": _inputController.text},
+      ),
+    );
   }
 
   @override
@@ -138,6 +171,17 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _inputController.dispose();
+    MoveoOne().track(
+      "home_screen",
+      MoveoOneData(
+        semanticGroup: "home_screen",
+        id: "home_screen_dispose",
+        type: MoveoOneType.custom,
+        action: MoveoOneAction.disappear,
+        value: "home_screen_dispose",
+        metadata: {},
+      ),
+    );
     super.dispose();
   }
 }
