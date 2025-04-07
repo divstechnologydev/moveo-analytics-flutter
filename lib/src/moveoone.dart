@@ -42,7 +42,7 @@ class MoveoOne {
   bool isCustomFlush() => _customPush;
 
   // Start tracking session
-  void start(String context) {
+  void start(String context, {Map<String, String> metadata = const {}}) {
     _log("start");
     if (!_started) {
       _flushOrRecord(true);
@@ -55,7 +55,7 @@ class MoveoOne {
         {},
         _userId,
         _sessionId,
-        {},
+        metadata,
       );
       _flushOrRecord(false);
     }
