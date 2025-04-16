@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'second_screen.dart'; // Import the new second screen
 
+import 'package:moveoone_flutter/moveoone_flutter.dart';
+import 'package:moveoone_flutter/src/constants.dart';
+import 'package:moveoone_flutter/src/moveo_one_data.dart';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MoveoOne().initialize("YOUR_SDK_TOKEN");
+  MoveoOne().start("home_screen");
   runApp(const MyApp());
 }
 
@@ -34,10 +41,73 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    // Track appear events for static elements
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "home_screen",
+        id: "title_text",
+        type: MoveoOneType.text,
+        action: MoveoOneAction.appear,
+        value: "Moveo One",
+        metadata: {"screen": "home_screen", "element": "title_text"},
+      ),
+    );
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "home_screen",
+        id: "description_text",
+        type: MoveoOneType.text,
+        action: MoveoOneAction.appear,
+        value: "This is an example Flutter app made for demo purposes.",
+        metadata: {"screen": "home_screen", "element": "description_text"},
+      ),
+    );
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "home_screen",
+        id: "button_one",
+        type: MoveoOneType.button,
+        action: MoveoOneAction.appear,
+        value: "Button One",
+        metadata: {"screen": "home_screen", "element": "button_one"},
+      ),
+    );
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "home_screen",
+        id: "button_two",
+        type: MoveoOneType.button,
+        action: MoveoOneAction.appear,
+        value: "Button Two",
+        metadata: {"screen": "home_screen", "element": "button_two"},
+      ),
+    );
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "home_screen",
+        id: "input_textfield",
+        type: MoveoOneType.textEdit,
+        action: MoveoOneAction.appear,
+        value: "input_textfield",
+        metadata: {"screen": "home_screen", "element": "input_textfield"},
+      ),
+    );
   }
 
   void _handleButtonPress(String buttonName) {
     print('Button pressed: $buttonName');
+    // Track button click
+    MoveoOne().track(
+      "home_screen",
+      MoveoOneData(
+        semanticGroup: "home_screen",
+        id: buttonName == "Button One" ? "button_one" : "button_two",
+        type: MoveoOneType.button,
+        action: MoveoOneAction.click,
+        value: buttonName,
+        metadata: {"screen": "home_screen", "button": buttonName},
+      ),
+    );
     // Navigate to the second screen when a button is pressed.
     Navigator.push(
       context,
@@ -46,6 +116,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _handleInputEnd() {
+    // Track input end
+    MoveoOne().track(
+      "home_screen",
+      MoveoOneData(
+        semanticGroup: "home_screen",
+        id: "input_textfield",
+        type: MoveoOneType.textEdit,
+        action: MoveoOneAction.input,
+        value: _inputController.text,
+        metadata: {"screen": "home_screen", "element": "input_textfield"},
+      ),
+    );
     // Handle input end if needed.
   }
 
@@ -137,6 +219,57 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    // Track disappear events for static elements
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "home_screen",
+        id: "title_text",
+        type: MoveoOneType.text,
+        action: MoveoOneAction.disappear,
+        value: "Moveo One",
+        metadata: {"screen": "home_screen", "element": "title_text"},
+      ),
+    );
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "home_screen",
+        id: "description_text",
+        type: MoveoOneType.text,
+        action: MoveoOneAction.disappear,
+        value: "This is an example Flutter app made for demo purposes.",
+        metadata: {"screen": "home_screen", "element": "description_text"},
+      ),
+    );
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "home_screen",
+        id: "button_one",
+        type: MoveoOneType.button,
+        action: MoveoOneAction.disappear,
+        value: "Button One",
+        metadata: {"screen": "home_screen", "element": "button_one"},
+      ),
+    );
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "home_screen",
+        id: "button_two",
+        type: MoveoOneType.button,
+        action: MoveoOneAction.disappear,
+        value: "Button Two",
+        metadata: {"screen": "home_screen", "element": "button_two"},
+      ),
+    );
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "home_screen",
+        id: "input_textfield",
+        type: MoveoOneType.textEdit,
+        action: MoveoOneAction.disappear,
+        value: "input_textfield",
+        metadata: {"screen": "home_screen", "element": "input_textfield"},
+      ),
+    );
     _inputController.dispose();
     super.dispose();
   }
