@@ -1,3 +1,6 @@
+## 0.0.6
+unused action types removed
+
 ## 0.0.5
 libVersion added to metadata of start session
 

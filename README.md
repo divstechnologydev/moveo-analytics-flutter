@@ -105,9 +105,8 @@ The library supports various UI component types:
 
 ### **c) Actions**
 Available tracking actions:
-- `MoveoOneAction.click` - User taps/clicks
+- `MoveoOneAction.tap` - User taps/clicks
 - `MoveoOneAction.appear` - Component becomes visible
-- `MoveoOneAction.view` - Viewing events
 - `MoveoOneAction.scroll` - Scrolling events
 - `MoveoOneAction.input` - Text input events
 - `MoveoOneAction.focus` - Component focus events
@@ -129,7 +128,7 @@ void trackButtonClick() {
       semanticGroup: "navigation",
       id: "btn_submit",
       type: MoveoOneType.button,
-      action: MoveoOneAction.click,
+      action: MoveoOneAction.tap,
       value: "Submit button clicked",
       metadata: {"screen": "home"},
     ),
