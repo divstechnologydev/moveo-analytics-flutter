@@ -1,3 +1,6 @@
+
+const String libVersion = '0.0.5';
+
 // Environment Enum
 enum Environment {
   development('development'),
