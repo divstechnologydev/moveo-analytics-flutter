@@ -1,3 +1,6 @@
+## 0.0.5
+libVersion added to metadata of start session
+
 ## 0.0.4
 Metadata param added to start session method
 
