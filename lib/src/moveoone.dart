@@ -49,13 +49,18 @@ class MoveoOne {
       _started = true;
       _context = context;
       _sessionId = "sid_${_generateUUID()}";
+
+      final mergedMetadata = Map<String, String>.from(metadata);
+      mergedMetadata['libVersion'] = libVersion;
+
+
       _addEventToBuffer(
         context,
         MoveoOneEventType.startSession,
         {},
         _userId,
         _sessionId,
-        metadata,
+        mergedMetadata,
       );
       _flushOrRecord(false);
     }

@@ -7,7 +7,6 @@ import 'package:moveoone_flutter/moveoone_flutter.dart';
 
 void main() {
   MoveoOne().initialize("your_api_key");
-  MoveoOne().start("main_screen"); // Must be called before any track/tick
   runApp(const MyApp());
 }
 
@@ -40,22 +39,48 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    MoveoOne().start("main_screen"); // Must be called before any track/tick
+
     MoveoOne().identify("demo_user_123");
 
-    // Track paragraph impression with metadata in tick
+    // Track element impression with metadata in tick
     MoveoOne().tick(
       MoveoOneData(
         semanticGroup: "content_interactions",
         id: "intro_paragraph",
         type: MoveoOneType.text,
-        // Using correct type
-        action: MoveoOneAction.view,
+        action: MoveoOneAction.appear,
         value: "demo_description",
         metadata: {
           "screen": "main_screen",
-          "interaction_type": "impression",
           "app_version": "1.0.0",
           "platform": "mobile",
+        },
+      ),
+    );
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "user_interactions",
+        id: "main_button",
+        type: MoveoOneType.button,
+        action: MoveoOneAction.appear,
+        value: "primary_action",
+        metadata: {
+          "source": "home_screen",
+          "button": "main_button",
+        },
+      ),
+    );
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "user_interactions",
+        id: "main_input",
+        type: MoveoOneType.textEdit,
+        action: MoveoOneAction.appear,
+        value: "text_entered",
+        metadata: {
+          "source": "home_screen",
         },
       ),
     );
@@ -84,14 +109,12 @@ class _HomeScreenState extends State<HomeScreen> {
       MoveoOneData(
         semanticGroup: "user_interactions",
         id: "main_input",
-        type: MoveoOneType.text,
-        // Using text type for input
+        type: MoveoOneType.textEdit,
         action: MoveoOneAction.edit,
         value: "text_entered",
         metadata: {
           "source": "home_screen",
           "input_length": _inputController.text.length.toString(),
-          // Convert to string
         },
       ),
     );
@@ -190,6 +213,47 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _inputController.dispose();
+
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "content_interactions",
+        id: "intro_paragraph",
+        type: MoveoOneType.text,
+        action: MoveoOneAction.disappear,
+        value: "demo_description",
+        metadata: {
+          "screen": "main_screen",
+          "app_version": "1.0.0",
+          "platform": "mobile",
+        },
+      ),
+    );
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "user_interactions",
+        id: "main_button",
+        type: MoveoOneType.button,
+        action: MoveoOneAction.disappear,
+        value: "primary_action",
+        metadata: {
+          "source": "home_screen",
+          "button": "main_button",
+        },
+      ),
+    );
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "user_interactions",
+        id: "main_input",
+        type: MoveoOneType.textEdit,
+        action: MoveoOneAction.disappear,
+        value: "text_entered",
+        metadata: {
+          "source": "home_screen",
+        },
+      ),
+    );
+
     super.dispose();
   }
 }
