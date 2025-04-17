@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:moveoone_flutter/moveoone_flutter.dart';
 
 void main() {
-  MoveoOne().initialize("your_api_key");
+  MoveoOne().initialize("iLtwRUOaZepHcIcw");
   runApp(const MyApp());
 }
 
@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
         semanticGroup: "user_interactions",
         id: "main_button",
         type: MoveoOneType.button,
-        action: MoveoOneAction.click,
+        action: MoveoOneAction.tap,
         value: "primary_action",
         metadata: {
           "source": "home_screen",

@@ -72,8 +72,6 @@ enum MoveoOneType {
 
 // MoveoOneAction Enum
 enum MoveoOneAction {
-  click('click'),
-  view('view'),
   appear('appear'),
   disappear('disappear'),
   swipe('swipe'),
@@ -96,8 +94,6 @@ enum MoveoOneAction {
   valueChange('valueChange'),
   dragStart('dragStart'),
   dragEnd('dragEnd'),
-  load('load'),
-  unload('unload'),
   refresh('refresh'),
   play('play'),
   pause('pause'),
@@ -108,8 +104,6 @@ enum MoveoOneAction {
   cancel('cancel'),
   retry('retry'),
   share('share'),
-  open('open'),
-  close('close'),
   expand('expand'),
   collapse('collapse'),
   edit('edit'),
