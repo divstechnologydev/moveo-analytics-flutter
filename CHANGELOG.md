@@ -1,3 +1,6 @@
+## 0.0.7
+Http depenedency change
+
 ## 0.0.6
 unused action types removed
 
