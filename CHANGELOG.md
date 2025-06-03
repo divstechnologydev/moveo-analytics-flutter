@@ -1,3 +1,6 @@
+## 0.0.8
+Http dependency change to 1.0.0
+
 ## 0.0.7
 Http depenedency change
 
