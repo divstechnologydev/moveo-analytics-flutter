@@ -58,7 +58,7 @@ void main() {
 
   // Starts the tracking session - optionally, place it to another place to start tracking
   // !!! but importantly prior to first track/tick event !!!
-  MoveoOne().initialize("your_context_eg_onboarding-app-settings");
+  MoveoOne().start("your_context_eg_onboarding-app-settings");
 
   runApp(const MyApp());
 }
