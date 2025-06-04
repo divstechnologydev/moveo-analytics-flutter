@@ -130,7 +130,6 @@ void trackButtonClick() {
       type: MoveoOneType.button,
       action: MoveoOneAction.tap,
       value: "Submit button clicked",
-      metadata: {"screen": "home"},
     ),
   );
 }
@@ -153,7 +152,6 @@ MoveoOne().track(
     type: MoveoOneType.textEdit,
     action: MoveoOneAction.input,
     value: "John Doe",
-    metadata: {"input_type": "name"},
   ),
 );
 ```
@@ -168,7 +166,6 @@ MoveoOne().track(
     type: MoveoOneType.slider,
     action: MoveoOneAction.valueChange,
     value: "75",
-    metadata: {"min": "0", "max": "100"},
   ),
 );
 ```
