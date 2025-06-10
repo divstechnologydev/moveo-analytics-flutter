@@ -1,3 +1,6 @@
+## 0.0.10
+Metadata is optional in MoveoOneData object
+
 ## 0.0.9
 Metadata removed from track and tick events
 
