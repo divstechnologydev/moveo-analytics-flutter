@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:moveoone_flutter/moveoone_flutter.dart';
 
 void main() {
-  MoveoOne().initialize("iLtwRUOaZepHcIcw1");
+  MoveoOne().initialize("YOUR_API_KEY");
   runApp(const MyApp());
 }
 
