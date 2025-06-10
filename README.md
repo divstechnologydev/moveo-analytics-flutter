@@ -152,7 +152,7 @@ MoveoOne().track(
     type: MoveoOneType.textEdit,
     action: MoveoOneAction.input,
     value: "John Doe",
-  ),
+  )
 );
 ```
 
@@ -166,7 +166,7 @@ MoveoOne().track(
     type: MoveoOneType.slider,
     action: MoveoOneAction.valueChange,
     value: "75",
-  ),
+  )
 );
 ```
 
