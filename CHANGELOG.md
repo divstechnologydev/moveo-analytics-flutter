@@ -1,3 +1,6 @@
+## 0.0.9
+Metadata removed from track and tick events
+
 ## 0.0.8
 Http dependency change to 1.0.0
 
