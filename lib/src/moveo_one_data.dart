@@ -14,7 +14,7 @@ class MoveoOneData {
     required this.type,
     required this.action,
     required this.value,
-    required this.metadata,
+    this.metadata = const {},
   });
 
   // Factory constructor to create an instance from a JSON map
