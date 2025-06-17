@@ -1,5 +1,5 @@
 
-const String libVersion = '0.0.5';
+const String libVersion = '0.0.11';
 
 // Environment Enum
 enum Environment {
@@ -14,7 +14,9 @@ enum Environment {
 enum MoveoOneEventType {
   startSession('start_session'),
   track('track'),
-  updateMetadata('update_metadata');
+  updateMetadata('update_metadata'),
+  updateAdditionalMetadata('update_additional_metadata');
+
 
   final String value;
   const MoveoOneEventType(this.value);
