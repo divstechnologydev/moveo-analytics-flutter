@@ -1,3 +1,6 @@
+## 0.0.11
+Additional metadata update method for additional metadata tracking
+
 ## 0.0.10
 Metadata is optional in MoveoOneData object
 

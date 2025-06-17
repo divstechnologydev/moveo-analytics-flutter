@@ -1,5 +1,5 @@
 
-const String libVersion = '0.0.9';
+const String libVersion = '0.0.11';
 
 // Environment Enum
 enum Environment {
