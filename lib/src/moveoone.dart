@@ -25,6 +25,9 @@ class MoveoOne {
   String _context = "";
   String _sessionId = "";
   bool _customPush = false;
+  Map<String, String> _metadata = {};
+  Map<String, String> _additionalMeta = {};
+
 
   MoveoOne._internal();
 
@@ -53,6 +56,8 @@ class MoveoOne {
       final mergedMetadata = Map<String, String>.from(metadata);
       mergedMetadata['libVersion'] = libVersion;
 
+      // Store the initial metadata
+      _metadata = Map<String, String>.from(mergedMetadata);
 
       _addEventToBuffer(
         context,
@@ -94,17 +99,40 @@ class MoveoOne {
     _tickInternal(properties);
   }
 
-  // Update session metadata
-  void updateSessionMetadata(Map<String, String> metadata) {
+
+  void updateSessionMetadata(Map<String, String> newMetadata) {
     _log("update session metadata");
     if (_started) {
+      // Merge new metadata with existing metadata
+      _metadata.addAll(newMetadata);
+
+      // Send the complete merged metadata object
       _addEventToBuffer(
         _context,
         MoveoOneEventType.updateMetadata,
         {},
         _userId,
         _sessionId,
-        metadata,
+        Map<String, String>.from(_metadata), // Send the whole metadata object
+      );
+      _flushOrRecord(false);
+    }
+  }
+
+  void updateAdditionalMetadata(Map<String, String> newAdditionalMeta) {
+    _log("update additional metadata");
+    if (_started) {
+      // Merge new additional metadata with existing additional metadata
+      _additionalMeta.addAll(newAdditionalMeta);
+
+      // Send the complete merged additional metadata object
+      _addEventToBuffer(
+        _context,
+        MoveoOneEventType.updateAdditionalMetadata,
+        {},
+        _userId,
+        _sessionId,
+        Map<String, String>.from(_additionalMeta), // Send the whole additional metadata object
       );
       _flushOrRecord(false);
     }
