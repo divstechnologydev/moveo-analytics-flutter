@@ -1,3 +1,6 @@
+## 0.0.13
+Additional metadata update method using update_metadata type
+
 ## 0.0.12
 Additional metadata update method fixed
 

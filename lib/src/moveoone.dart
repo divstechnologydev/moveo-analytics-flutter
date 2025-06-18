@@ -130,7 +130,7 @@ class MoveoOne {
       // Send the complete merged additional metadata object
       _addEventToBuffer(
         _context,
-        MoveoOneEventType.updateAdditionalMetadata,
+        MoveoOneEventType.updateMetadata,
         {},
         _userId,
         _sessionId,
