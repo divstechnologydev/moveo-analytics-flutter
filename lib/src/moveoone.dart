@@ -66,6 +66,7 @@ class MoveoOne {
         _userId,
         _sessionId,
         mergedMetadata,
+        additionalMeta: {},
       );
       _flushOrRecord(false);
     }
@@ -114,6 +115,7 @@ class MoveoOne {
         _userId,
         _sessionId,
         Map<String, String>.from(_metadata), // Send the whole metadata object
+        additionalMeta: {},
       );
       _flushOrRecord(false);
     }
@@ -132,7 +134,8 @@ class MoveoOne {
         {},
         _userId,
         _sessionId,
-        Map<String, String>.from(_additionalMeta), // Send the whole additional metadata object
+        {},
+        additionalMeta: Map<String, String>.from(_additionalMeta), // Send the whole additional metadata object
       );
       _flushOrRecord(false);
     }
@@ -143,7 +146,7 @@ class MoveoOne {
     if (!_started) {
       start(context);
     }
-    _addEventToBuffer(context, MoveoOneEventType.track, properties, _userId, _sessionId, {});
+    _addEventToBuffer(context, MoveoOneEventType.track, properties, _userId, _sessionId, {}, additionalMeta: {});
     _flushOrRecord(false);
   }
 
@@ -152,7 +155,7 @@ class MoveoOne {
     if (_context.isEmpty) {
       start("default_ctx");
     }
-    _addEventToBuffer(_context, MoveoOneEventType.track, properties, _userId, _sessionId, {});
+    _addEventToBuffer(_context, MoveoOneEventType.track, properties, _userId, _sessionId, {}, additionalMeta: {});
     _flushOrRecord(false);
   }
 
@@ -164,6 +167,7 @@ class MoveoOne {
     String userId,
     String sessionId,
     Map<String, String> meta,
+      {Map<String, String> additionalMeta = const {}}
   ) {
     int now = DateTime.now().millisecondsSinceEpoch;
     _buffer.add(MoveoOneEntity(
@@ -173,6 +177,7 @@ class MoveoOne {
       t: now,
       prop: prop,
       meta: meta,
+      additionalMeta: additionalMeta,
       sId: sessionId,
     ));
   }

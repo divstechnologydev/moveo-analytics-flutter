@@ -1,6 +1,6 @@
 name: moveoone_flutter
 description: "A Flutter SDK for MoveoOne analytics and UX detection."
-version: 0.0.11
+version: 0.0.12
 homepage: https://github.com/divstechnologydev/moveo-analytics-flutter
 repository: https://github.com/divstechnologydev/moveo-analytics-flutter
 issue_tracker: https://github.com/divstechnologydev/moveo-analytics-flutter/issues

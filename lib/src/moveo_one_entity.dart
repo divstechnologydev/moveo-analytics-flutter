@@ -5,6 +5,7 @@ class MoveoOneEntity {
   final int t; // Timestamp
   final Map<String, String> prop;
   final Map<String, String> meta;
+  final Map<String, String> additionalMeta;
   final String sId;
 
   MoveoOneEntity({
@@ -14,6 +15,7 @@ class MoveoOneEntity {
     required this.t,
     required this.prop,
     required this.meta,
+    this.additionalMeta = const {},
     required this.sId,
   });
 
@@ -26,6 +28,7 @@ class MoveoOneEntity {
       t: json['t'] as int,
       prop: Map<String, String>.from(json['prop'] ?? {}),
       meta: Map<String, String>.from(json['meta'] ?? {}),
+      additionalMeta: Map<String, String>.from(json['additionalMeta'] ?? {}),
       sId: json['sId'] as String,
     );
   }
@@ -39,6 +42,7 @@ class MoveoOneEntity {
       't': t,
       'prop': prop,
       'meta': meta,
+      'additionalMeta': additionalMeta,
       'sId': sId,
     };
   }

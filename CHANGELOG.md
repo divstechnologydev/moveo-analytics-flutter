@@ -1,3 +1,6 @@
+## 0.0.12
+Additional metadata update method fixed
+
 ## 0.0.11
 Additional metadata update method for additional metadata tracking
 
