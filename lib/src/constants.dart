@@ -14,9 +14,7 @@ enum Environment {
 enum MoveoOneEventType {
   startSession('start_session'),
   track('track'),
-  updateMetadata('update_metadata'),
-  updateAdditionalMetadata('update_additional_metadata');
-
+  updateMetadata('update_metadata');
 
   final String value;
   const MoveoOneEventType(this.value);
