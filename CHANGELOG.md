@@ -1,3 +1,6 @@
+## 0.0.12
+Additional metadata update method using update_metadata event type
+
 ## 0.0.11
 Additional metadata update method for additional metadata tracking
 
