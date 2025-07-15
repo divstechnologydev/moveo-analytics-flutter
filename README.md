@@ -512,6 +512,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    // Track screen disappearance
+    MoveoOne().tick(
+      MoveoOneData(
+        semanticGroup: "screen_interaction",
+        id: "home_screen",
+        type: MoveoOneType.text,
+        action: MoveoOneAction.disappear,
+        value: "Home screen unloaded",
+      ),
+    );
+    
     _searchController.dispose();
     super.dispose();
   }
