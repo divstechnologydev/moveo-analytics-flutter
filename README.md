@@ -535,7 +535,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 To obtain an API key:
 
-1. Visit [Moveo One Dashboard](https://app.moveo.one/)
+1. Visit [Moveo One App](https://app.moveo.one/)
 2. Sign up for an account
 3. Create a new project
 4. Get your unique API token from the project settings
