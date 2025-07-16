@@ -26,7 +26,6 @@ Welcome to the official Moveo One Flutter library.
 Moveo One Analytics is a **user cognitive-behavioral analytics** tool that provides deep insights into user behavior and interaction patterns. The `moveo-analytics-flutter` SDK enables Flutter applications to leverage Moveo One's advanced analytics capabilities.
 
 ### **Key Features**
-- **Real-time user interaction tracking**
 - **Semantic grouping of user actions**
 - **Component-level analytics**
 - **Non-intrusive integration**
@@ -548,7 +547,7 @@ To obtain an API key:
 Once your data is being tracked, you can access your analytics through the Moveo One Dashboard at [https://app.moveo.one/](https://app.moveo.one/)
 
 The dashboard provides:
-- **Real-time analytics viewing**
+- **Analytics viewing**
 - **User behavior patterns**
 - **Interaction flow visualization**
 - **Custom report generation**
