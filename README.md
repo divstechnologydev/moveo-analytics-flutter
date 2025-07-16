@@ -94,30 +94,46 @@ MoveoOne().start(
 
 #### **updateSessionMetadata()**
 
-Updates the session metadata that will be included with all subsequent events in the session.
+Updates current session metadata. Session metadata should split sessions by information that influences content or creates visually different variations of the same application. Sessions split by these parameters will be analyzed separately by our UX analyzer.
 
 ```dart
 MoveoOne().updateSessionMetadata({
-  "user_preference": "dark_mode",
-  "current_section": "checkout",
-  "user_type": "premium",
+  "locale": "eng",
+  "theme": "dark",
+  "app_version": "2.1.0",
+  "platform": "ios",
+  "screen_size": "large",
+  "accessibility_mode": "enabled",
+  "language": "english",
 });
 ```
 
 **When to Call This Method:**
 - When important information about the user or session changes during the app's lifecycle
 - **Don't call before session starts**
-- Use for primary session-related data
+- Use for parameters that create different visual or content variations
+- Examples: locale, theme, user type, app version, platform, accessibility settings
 
 #### **updateAdditionalMetadata()**
 
-Updates additional metadata for experimental or secondary data tracking.
+Updates additional metadata for the session. This is used as data enrichment and enables specific queries or analysis by the defined split.
 
 ```dart
 MoveoOne().updateAdditionalMetadata({
+  "user_country": "US",
+  "company": "example_company",
   "experiment_$experimentName": variant,
   "experiment_assigned": DateTime.now().toIso8601String(),
   "feature_flag": "enabled",
+  "user_id": "user_12345",
+  "timezone": "America/New_York",
+  "user_age_group": "25-34",
+  "user_gender": "female",
+  "account_created_date": "2023-01-15",
+  "last_login_date": "2024-01-20",
+  "total_sessions": "45",
+  "preferred_payment_method": "credit_card",
+  "marketing_source": "app_store",
 });
 ```
 
@@ -125,6 +141,7 @@ MoveoOne().updateAdditionalMetadata({
 - For secondary or experimental data
 - When you want to track data separately from main session metadata
 - **Don't call before session starts**
+- Use for data enrichment and specific analysis queries
 
 ### Track Data
 
