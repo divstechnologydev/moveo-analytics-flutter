@@ -98,13 +98,8 @@ Updates current session metadata. Session metadata should split sessions by info
 
 ```dart
 MoveoOne().updateSessionMetadata({
+  "test": "a",
   "locale": "eng",
-  "theme": "dark",
-  "app_version": "2.1.0",
-  "platform": "ios",
-  "screen_size": "large",
-  "accessibility_mode": "enabled",
-  "language": "english",
 });
 ```
 
@@ -112,7 +107,9 @@ MoveoOne().updateSessionMetadata({
 - When important information about the user or session changes during the app's lifecycle
 - **Don't call before session starts**
 - Use for parameters that create different visual or content variations
-- Examples: locale, theme, user type, app version, platform, accessibility settings
+- **Session metadata examples:**
+  - `sessionMetadata.put("test", "a");`
+  - `sessionMetadata.put("locale", "eng");`
 
 #### **updateAdditionalMetadata()**
 
@@ -120,20 +117,14 @@ Updates additional metadata for the session. This is used as data enrichment and
 
 ```dart
 MoveoOne().updateAdditionalMetadata({
+  "app_version": "2.1.0",
   "user_country": "US",
   "company": "example_company",
-  "experiment_$experimentName": variant,
-  "experiment_assigned": DateTime.now().toIso8601String(),
-  "feature_flag": "enabled",
-  "user_id": "user_12345",
-  "timezone": "America/New_York",
-  "user_age_group": "25-34",
-  "user_gender": "female",
-  "account_created_date": "2023-01-15",
-  "last_login_date": "2024-01-20",
-  "total_sessions": "45",
-  "preferred_payment_method": "credit_card",
-  "marketing_source": "app_store",
+  "user_role": "admin", // or "user", "manager", "viewer"
+  "acquisition_channel": "organic", // or "paid", "referral", "direct"
+  "device_category": "mobile", // or "desktop", "tablet"
+  "subscription_plan": "pro", // or "basic", "enterprise"
+  "has_purchased": "true", // or "false"
 });
 ```
 
@@ -142,6 +133,15 @@ MoveoOne().updateAdditionalMetadata({
 - When you want to track data separately from main session metadata
 - **Don't call before session starts**
 - Use for data enrichment and specific analysis queries
+- **Additional metadata examples:**
+  - `additionalMetadata.put("app_version", "2.1.0");`
+  - `additionalMetadata.put("user_country", "US");`
+  - `additionalMetadata.put("company", "example_company");`
+  - `additionalMetadata.put("user_role", "admin"); // or "user", "manager", "viewer"`
+  - `additionalMetadata.put("acquisition_channel", "organic"); // or "paid", "referral", "direct"`
+  - `additionalMetadata.put("device_category", "mobile"); // or "desktop", "tablet"`
+  - `additionalMetadata.put("subscription_plan", "pro"); // or "basic", "enterprise"`
+  - `additionalMetadata.put("has_purchased", "true"); // or "false"`
 
 ### Track Data
 
