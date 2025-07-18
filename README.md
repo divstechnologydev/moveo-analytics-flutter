@@ -110,6 +110,8 @@ MoveoOne().updateSessionMetadata({
 - **Session metadata examples:**
   - `sessionMetadata.put("test", "a");`
   - `sessionMetadata.put("locale", "eng");`
+  - `sessionMetadata.put("app_version", "2.1.0");`
+
 
 #### **updateAdditionalMetadata()**
 
@@ -117,7 +119,6 @@ Updates additional metadata for the session. This is used as data enrichment and
 
 ```dart
 MoveoOne().updateAdditionalMetadata({
-  "app_version": "2.1.0",
   "user_country": "US",
   "company": "example_company",
   "user_role": "admin", // or "user", "manager", "viewer"
@@ -158,10 +159,7 @@ MoveoOne().track(
     type: MoveoOneType.button,
     action: MoveoOneAction.tap,
     value: "Submit button clicked",
-    metadata: {
-      "source": "home_screen",
-      "button": "main_button",
-    },
+    metadata: {},
   ),
 );
 ```
@@ -183,10 +181,7 @@ MoveoOne().tick(
     type: MoveoOneType.button,
     action: MoveoOneAction.appear,
     value: "primary_action",
-    metadata: {
-      "source": "home_screen",
-      "button": "main_button",
-    },
+    metadata: {},
   ),
 );
 ```
