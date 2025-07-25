@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:moveoone_flutter/moveoone_flutter.dart';
 import 'package:moveoone_flutter/src/constants.dart';
 import 'package:moveoone_flutter/src/moveo_one_data.dart';
-import 'package:flutter/material.dart';
-import 'package:moveoone_flutter/moveoone_flutter.dart';
 
 void main() {
   MoveoOne().initialize("YOUR_API_KEY");
@@ -41,8 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     MoveoOne().start("main_screen"); // Must be called before any track/tick
-
-    MoveoOne().identify("DEMO_USER_ID");
 
     // Track element impression with metadata in tick
     MoveoOne().tick(

@@ -19,7 +19,6 @@ class MoveoOne {
   final Duration _flushInterval = const Duration(seconds: 10);
 
   String _token = "";
-  String _userId = "";
   bool _logging = false;
   bool _started = false;
   String _context = "";
@@ -37,10 +36,7 @@ class MoveoOne {
     _log("Initialized");
   }
 
-  // Identify the user
-  void identify(String userId) {
-    _userId = userId;
-  }
+
 
   bool isCustomFlush() => _customPush;
 
@@ -63,7 +59,6 @@ class MoveoOne {
         context,
         MoveoOneEventType.startSession,
         {},
-        _userId,
         _sessionId,
         mergedMetadata,
         additionalMeta: {},
@@ -112,7 +107,6 @@ class MoveoOne {
         _context,
         MoveoOneEventType.updateMetadata,
         {},
-        _userId,
         _sessionId,
         Map<String, String>.from(_metadata), // Send the whole metadata object
         additionalMeta: {},
@@ -132,7 +126,6 @@ class MoveoOne {
         _context,
         MoveoOneEventType.updateMetadata,
         {},
-        _userId,
         _sessionId,
         {},
         additionalMeta: Map<String, String>.from(_additionalMeta), // Send the whole additional metadata object
@@ -146,7 +139,7 @@ class MoveoOne {
     if (!_started) {
       start(context);
     }
-    _addEventToBuffer(context, MoveoOneEventType.track, properties, _userId, _sessionId, {}, additionalMeta: {});
+    _addEventToBuffer(context, MoveoOneEventType.track, properties, _sessionId, {}, additionalMeta: {});
     _flushOrRecord(false);
   }
 
@@ -155,7 +148,7 @@ class MoveoOne {
     if (_context.isEmpty) {
       start("default_ctx");
     }
-    _addEventToBuffer(_context, MoveoOneEventType.track, properties, _userId, _sessionId, {}, additionalMeta: {});
+    _addEventToBuffer(_context, MoveoOneEventType.track, properties, _sessionId, {}, additionalMeta: {});
     _flushOrRecord(false);
   }
 
@@ -164,7 +157,6 @@ class MoveoOne {
     String context,
     MoveoOneEventType type,
     Map<String, String> prop,
-    String userId,
     String sessionId,
     Map<String, String> meta,
       {Map<String, String> additionalMeta = const {}}
@@ -173,7 +165,6 @@ class MoveoOne {
     _buffer.add(MoveoOneEntity(
       c: context,
       type: type.value,
-      userId: userId,
       t: now,
       prop: prop,
       meta: meta,
