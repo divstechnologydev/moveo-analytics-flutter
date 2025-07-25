@@ -78,7 +78,7 @@ class MoveoOne {
       'eV': _convertValueToString(data.value),
     };
 
-    _trackInternal(context, properties);
+    _trackInternal(context, properties, data.metadata);
   }
 
   // Tick event
@@ -92,7 +92,7 @@ class MoveoOne {
       'eV': _convertValueToString(data.value),
     };
 
-    _tickInternal(properties);
+    _tickInternal(properties, data.metadata);
   }
 
 
@@ -135,20 +135,20 @@ class MoveoOne {
   }
 
   // Internal method to track events
-  void _trackInternal(String context, Map<String, String> properties) {
+  void _trackInternal(String context, Map<String, String> properties, Map<String, String> metadata) {
     if (!_started) {
       start(context);
     }
-    _addEventToBuffer(context, MoveoOneEventType.track, properties, _sessionId, {}, additionalMeta: {});
+    _addEventToBuffer(context, MoveoOneEventType.track, properties, _sessionId, metadata, additionalMeta: {});
     _flushOrRecord(false);
   }
 
   // Internal method for ticking events
-  void _tickInternal(Map<String, String> properties) {
+  void _tickInternal(Map<String, String> properties, Map<String, String> metadata) {
     if (_context.isEmpty) {
       start("default_ctx");
     }
-    _addEventToBuffer(_context, MoveoOneEventType.track, properties, _sessionId, {}, additionalMeta: {});
+    _addEventToBuffer(_context, MoveoOneEventType.track, properties, _sessionId, metadata, additionalMeta: {});
     _flushOrRecord(false);
   }
 
