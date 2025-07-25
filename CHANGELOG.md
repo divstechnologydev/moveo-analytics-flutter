@@ -1,3 +1,6 @@
+## 0.0.14
+Metadata optional in track/tick, identify method removed
+
 ## 0.0.13
 Additional metadata update method using update_metadata type
 
