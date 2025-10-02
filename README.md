@@ -561,8 +561,6 @@ final result = await MoveoOne().predict("your-model-id");
 if (result.success) {
   print("Prediction probability: ${result.predictionProbability}");
   print("Binary result: ${result.predictionBinary}");
-} else if (result.status == 'pending') {
-  print("Model loading, please try again");
 } else {
   print("Error: ${result.message}");
 }
@@ -606,7 +604,7 @@ PredictionResult(
 PredictionResult(
   success: false,
   status: 'pending',
-  message: 'Model is loading, please try again',
+  message: 'Model is loading',
 )
 ```
 
@@ -671,7 +669,7 @@ PredictionResult(
 PredictionResult(
   success: false,
   status: 'timeout',
-  message: 'Request timed out after 10 seconds',
+  message: 'Request timed out after 5 seconds',
 )
 ```
 
@@ -695,14 +693,8 @@ Future<Map<String, dynamic>?> getPersonalizedRecommendations(String userId) asyn
           "reason": "Low confidence prediction"
         };
       }
-    } else if (prediction.status == 'pending') {
-      // Model is still loading
-      print(prediction.message);
-      // Retry after a delay
-      await Future.delayed(Duration(seconds: 2));
-      return await getPersonalizedRecommendations(userId);
     } else {
-      // Handle errors
+      // Handle all error states (including pending)
       print("Prediction failed: ${prediction.message}");
       return null;
     }
@@ -713,21 +705,11 @@ Future<Map<String, dynamic>?> getPersonalizedRecommendations(String userId) asyn
 }
 ```
 
-### Error Handling Best Practices
-
-1. **Always check `success` property first** to determine if the operation completed successfully
-2. **Check `status` property** to understand the specific outcome (success, pending, error type)
-3. **Handle pending states** appropriately - models may need time to load
-4. **Implement retry logic** for pending states or network errors
-5. **Log errors** for debugging purposes
-6. **Provide fallback behavior** when predictions fail
-
 ### Notes
 
 - The `predict` method is **non-blocking** and won't affect your application's performance
-- All requests have a 10-second timeout to prevent hanging
+- All requests have a 5-second timeout to prevent hanging
 - The method automatically uses the current session ID from the MoveoOne instance
-- **202 responses are normal pending states** - models may need time to load or validate
 - The method returns a Future, so you can use `async/await` or `.then()`
 
 ---

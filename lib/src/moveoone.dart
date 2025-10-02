@@ -181,7 +181,7 @@ class MoveoOne {
     _log('predict - request for model: "$modelId"');
     
     try {
-      const timeoutDuration = Duration(seconds: 10);
+      const timeoutDuration = Duration(seconds: 5);
       final uri = Uri.parse('${dolphinBaseUrl}/api/models/${Uri.encodeComponent(modelId)}/predict');
       
       final response = await http.post(
@@ -292,7 +292,7 @@ class MoveoOne {
       return PredictionResult(
         success: false,
         status: 'timeout',
-        message: 'Request timed out after 10 seconds',
+        message: 'Request timed out after 5 seconds',
       );
     } catch (error) {
       _log('predict - error for model "$modelId": $error');
