@@ -646,6 +646,15 @@ PredictionResult(
 )
 ```
 
+**Conflict - Conditional Event Not Found**
+```dart
+PredictionResult(
+  success: false,
+  status: 'conflict',
+  message: 'Conditional event not found',
+)
+```
+
 **Server Error**
 ```dart
 PredictionResult(

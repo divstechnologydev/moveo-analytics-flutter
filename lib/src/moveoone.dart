@@ -267,6 +267,12 @@ class MoveoOne {
             status: 'not_found',
             message: 'Model not found or not accessible',
           );
+        case 409:
+          return PredictionResult(
+            success: false,
+            status: 'conflict',
+            message: 'Conditional event not found',
+          );
         case 422:
           return PredictionResult(
             success: false,
