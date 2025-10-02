@@ -151,10 +151,10 @@ packages:
     dependency: "direct main"
     description:
       name: moveoone_flutter
-      sha256: d1a7e36f81af855278cc771a291e16c26d3465c8cbdaa9249563ebe7bbcad677
+      sha256: ae88caea7e7b7469aed842176ecaabae97586bf26d1a9283234b492be60b0236
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.8"
+    version: "0.0.14"
   path:
     dependency: transitive
     description:

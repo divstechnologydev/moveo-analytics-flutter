@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'constants.dart';
 import 'moveo_one_entity.dart';
 import 'moveo_one_data.dart';
+import 'prediction_result.dart';
 
 class MoveoOne {
   static const String tag = "MOVEO_ONE";
@@ -131,6 +132,185 @@ class MoveoOne {
         additionalMeta: Map<String, String>.from(_additionalMeta), // Send the whole additional metadata object
       );
       _flushOrRecord(false);
+    }
+  }
+
+  /// Makes a prediction request to the Dolphin servce
+  /// 
+  /// Returns a PredictionResult with prediction results or error information.
+  /// This method is non-blocking and follows Flutter best practices.
+  /// 
+  /// Parameters:
+  /// - [modelId]: The model ID to use for prediction
+  /// 
+  /// Returns:
+  /// Future<PredictionResult>: Result object with typed properties:
+  /// - success: bool - whether the operation completed successfully
+  /// - status: String - specific status (success, error types, etc.)
+  /// - predictionProbability: double? - probability if successful
+  /// - predictionBinary: bool? - binary result if successful  
+  /// - message: String? - error message if not successful
+  Future<PredictionResult> predict(String modelId) async {
+    // Validate model ID
+    if (modelId.trim().isEmpty) {
+      return PredictionResult(
+        success: false,
+        status: 'invalid_model_id',
+        message: 'Model ID is required and must be a non-empty string',
+      );
+    }
+
+    // Check if token is available
+    if (_token.trim().isEmpty) {
+      return PredictionResult(
+        success: false,
+        status: 'not_initialized',
+        message: 'MoveoOne must be initialized with a valid token before using predict method',
+      );
+    }
+
+    // Ensure session is started
+    if (!_started || _sessionId.isEmpty) {
+      return PredictionResult(
+        success: false,
+        status: 'no_session',
+        message: 'Session must be started before making predictions. Call start() method first.',
+      );
+    }
+
+    _log('predict - request for model: "$modelId"');
+    
+    try {
+      const timeoutDuration = Duration(seconds: 10);
+      final uri = Uri.parse('${dolphinBaseUrl}/api/models/${Uri.encodeComponent(modelId)}/predict');
+      
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': _token,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'session_id': _sessionId,
+        }),
+      ).timeout(timeoutDuration);
+
+      _log('predict - response for model "$modelId": Status ${response.statusCode}');
+      
+      // Handle 202 responses (pending states)
+      if (response.statusCode == 202) {
+        try {
+          final data = jsonDecode(response.body);
+          return PredictionResult(
+            success: false,
+            status: 'pending',
+            message: data['message'] ?? 'Model is loading, please try again',
+          );
+        } catch (e) {
+          return PredictionResult(
+            success: false,
+            status: 'pending',
+            message: 'Model is loading, please try again',
+          );
+        }
+      }
+      
+      // Handle successful prediction (200)
+      if (response.statusCode == 200) {
+        try {
+          final data = jsonDecode(response.body);
+          if (data != null) {
+            return PredictionResult(
+              success: true,
+              status: 'success',
+              predictionProbability: data['prediction_probability']?.toDouble(),
+              predictionBinary: data['prediction_binary'],
+            );
+          }
+        } catch (e) {
+          _log('predict - parse error for model "$modelId": $e');
+          return PredictionResult(
+            success: false,
+            status: 'server_error',
+            message: 'Invalid response format from server',
+          );
+        }
+      }
+      
+      // Handle HTTP error responses
+      String errorMessage = 'Server error processing prediction request';
+      try {
+        if (response.body.isNotEmpty) {
+          final data = jsonDecode(response.body);
+          errorMessage = data['detail'] ?? data['message'] ?? errorMessage;
+        }
+      } catch (e) {
+        // Use default error message if JSON parsing fails
+      }
+
+      switch (response.statusCode) {
+        case 401:
+          return PredictionResult(
+            success: false,
+            status: 'unauthorized',
+            message: 'Authentication token is invalid or expired',
+          );
+        case 403:
+          return PredictionResult(
+            success: false,
+            status: 'forbidden',
+            message: 'Access denied to this model',
+          );
+        case 404:
+          return PredictionResult(
+            success: false,
+            status: 'not_found',
+            message: 'Model not found or not accessible',
+          );
+        case 422:
+          return PredictionResult(
+            success: false,
+            status: 'invalid_data',
+            message: errorMessage,
+          );
+        case 500:
+          return PredictionResult(
+            success: false,
+            status: 'server_error',
+            message: 'Server error processing prediction request',
+          );
+        default:
+          return PredictionResult(
+            success: false,
+            status: 'server_error',
+            message: errorMessage,
+          );
+      }
+
+    } on TimeoutException {
+      _log('predict - timeout for model "$modelId"');
+      return PredictionResult(
+        success: false,
+        status: 'timeout',
+        message: 'Request timed out after 10 seconds',
+      );
+    } catch (error) {
+      _log('predict - error for model "$modelId": $error');
+      
+      if (error.toString().contains('SocketException') || 
+          error.toString().contains('NetworkException')) {
+        return PredictionResult(
+          success: false,
+          status: 'network_error',
+          message: 'Network error - please check your connection',
+        );
+      }
+
+      return PredictionResult(
+        success: false,
+        status: 'unknown_error',
+        message: 'An unexpected error occurred: ${error.toString()}',
+      );
     }
   }
 
