@@ -17,7 +17,7 @@ class MoveoOne {
   final List<MoveoOneEntity> _buffer = [];
   Timer? _flushTimer;
   final int _maxThreshold = 500;
-  final Duration _flushInterval = const Duration(seconds: 10);
+  final Duration _flushInterval = const Duration(milliseconds: 150);
 
   String _token = "";
   bool _logging = false;
@@ -135,10 +135,11 @@ class MoveoOne {
     }
   }
 
-  /// Makes a prediction request to the Dolphin servce
+  /// Makes a prediction request to the Dolphin service
   /// 
   /// Returns a PredictionResult with prediction results or error information.
   /// This method is non-blocking and follows Flutter best practices.
+  /// Sends all current buffer events along with the session ID for prediction.
   /// 
   /// Parameters:
   /// - [modelId]: The model ID to use for prediction
@@ -191,6 +192,7 @@ class MoveoOne {
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
+          'events': _buffer.map((e) => e.toJson()).toList(),
           'session_id': _sessionId,
         }),
       ).timeout(timeoutDuration);
