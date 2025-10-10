@@ -566,6 +566,28 @@ if (result.success) {
 }
 ```
 
+### Latency Calculation
+
+The MoveoOne library automatically tracks prediction latency and sends performance data to the Dolphin service for monitoring and analytics. This feature is enabled by default but can be controlled programmatically.
+
+#### Enable/Disable Latency Tracking
+
+```dart
+// Enable latency calculation (default behavior)
+MoveoOne().calculateLatency(true);
+
+// Disable latency calculation
+MoveoOne().calculateLatency(false);
+```
+
+#### How It Works
+
+When latency calculation is enabled:
+1. **Start time tracking**: Records the timestamp when the prediction request begins
+2. **End time tracking**: Records the timestamp when the prediction response is received
+3. **Async reporting**: Sends latency data to `/api/prediction-latency` endpoint asynchronously after returning the prediction result
+4. **No performance impact**: The latency tracking runs in the background and doesn't affect the prediction response time
+
 ### Prerequisites
 
 Before using the predict method, ensure:

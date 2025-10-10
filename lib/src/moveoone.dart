@@ -27,6 +27,7 @@ class MoveoOne {
   bool _customPush = false;
   Map<String, String> _metadata = {};
   Map<String, String> _additionalMeta = {};
+  bool _calculateLatency = true;
 
 
   MoveoOne._internal();
@@ -40,6 +41,11 @@ class MoveoOne {
 
 
   bool isCustomFlush() => _customPush;
+
+  // Enable or disable latency calculation
+  void calculateLatency(bool enabled) {
+    _calculateLatency = enabled;
+  }
 
   // Start tracking session
   void start(String context, {Map<String, String> metadata = const {}}) {
@@ -152,34 +158,55 @@ class MoveoOne {
   /// - predictionBinary: bool? - binary result if successful  
   /// - message: String? - error message if not successful
   Future<PredictionResult> predict(String modelId) async {
+    // Record start time for latency calculation
+    final startTime = DateTime.now().millisecondsSinceEpoch;
     // Validate model ID
     if (modelId.trim().isEmpty) {
-      return PredictionResult(
+      final result = PredictionResult(
         success: false,
         status: 'invalid_model_id',
         message: 'Model ID is required and must be a non-empty string',
       );
+      
+      // Send latency data for validation error
+      if (_calculateLatency) {
+        _sendLatencyDataAsync(modelId, startTime, false, 'validation_error');
+      }
+      
+      return result;
     }
 
     // Check if token is available
     if (_token.trim().isEmpty) {
-      return PredictionResult(
+      final result = PredictionResult(
         success: false,
         status: 'not_initialized',
         message: 'MoveoOne must be initialized with a valid token before using predict method',
       );
+      
+      // Send latency data for validation error
+      if (_calculateLatency) {
+        _sendLatencyDataAsync(modelId, startTime, false, 'validation_error');
+      }
+      
+      return result;
     }
 
     // Ensure session is started
     if (!_started || _sessionId.isEmpty) {
-      return PredictionResult(
+      final result = PredictionResult(
         success: false,
         status: 'no_session',
         message: 'Session must be started before making predictions. Call start() method first.',
       );
+      
+      // Send latency data for validation error
+      if (_calculateLatency) {
+        _sendLatencyDataAsync(modelId, startTime, false, 'validation_error');
+      }
+      
+      return result;
     }
-
-    _log('predict - request for model: "$modelId"');
     
     try {
       const timeoutDuration = Duration(seconds: 5);
@@ -203,17 +230,31 @@ class MoveoOne {
       if (response.statusCode == 202) {
         try {
           final data = jsonDecode(response.body);
-          return PredictionResult(
+          final result = PredictionResult(
             success: false,
             status: 'pending',
             message: data['message'] ?? 'Model is loading, please try again',
           );
+          
+          // Send latency data for pending response
+          if (_calculateLatency) {
+            _sendLatencyDataAsync(modelId, startTime, false, 'pending');
+          }
+          
+          return result;
         } catch (e) {
-          return PredictionResult(
+          final result = PredictionResult(
             success: false,
             status: 'pending',
             message: 'Model is loading, please try again',
           );
+          
+          // Send latency data for pending response
+          if (_calculateLatency) {
+            _sendLatencyDataAsync(modelId, startTime, false, 'pending');
+          }
+          
+          return result;
         }
       }
       
@@ -222,20 +263,34 @@ class MoveoOne {
         try {
           final data = jsonDecode(response.body);
           if (data != null) {
-            return PredictionResult(
+            final result = PredictionResult(
               success: true,
               status: 'success',
               predictionProbability: data['prediction_probability']?.toDouble(),
               predictionBinary: data['prediction_binary'],
             );
+            
+            // Send latency data asynchronously after returning result
+            if (_calculateLatency) {
+              _sendLatencyDataAsync(modelId, startTime, true, null);
+            }
+            
+            return result;
           }
         } catch (e) {
           _log('predict - parse error for model "$modelId": $e');
-          return PredictionResult(
+          final result = PredictionResult(
             success: false,
             status: 'server_error',
             message: 'Invalid response format from server',
           );
+          
+          // Send latency data for error case
+          if (_calculateLatency) {
+            _sendLatencyDataAsync(modelId, startTime, false, 'parse_error');
+          }
+          
+          return result;
         }
       }
       
@@ -250,75 +305,105 @@ class MoveoOne {
         // Use default error message if JSON parsing fails
       }
 
+      PredictionResult result;
       switch (response.statusCode) {
         case 401:
-          return PredictionResult(
+          result = PredictionResult(
             success: false,
             status: 'unauthorized',
             message: 'Authentication token is invalid or expired',
           );
+          break;
         case 403:
-          return PredictionResult(
+          result = PredictionResult(
             success: false,
             status: 'forbidden',
             message: 'Access denied to this model',
           );
+          break;
         case 404:
-          return PredictionResult(
+          result = PredictionResult(
             success: false,
             status: 'not_found',
             message: 'Model not found or not accessible',
           );
+          break;
         case 409:
-          return PredictionResult(
+          result = PredictionResult(
             success: false,
             status: 'conflict',
             message: 'Conditional event not found',
           );
+          break;
         case 422:
-          return PredictionResult(
+          result = PredictionResult(
             success: false,
             status: 'invalid_data',
             message: errorMessage,
           );
+          break;
         case 500:
-          return PredictionResult(
+          result = PredictionResult(
             success: false,
             status: 'server_error',
             message: 'Server error processing prediction request',
           );
+          break;
         default:
-          return PredictionResult(
+          result = PredictionResult(
             success: false,
             status: 'server_error',
             message: errorMessage,
           );
+          break;
       }
+      
+      // Send latency data for error responses
+      if (_calculateLatency) {
+        _sendLatencyDataAsync(modelId, startTime, false, 'http_error_${response.statusCode}');
+      }
+      
+      return result;
 
     } on TimeoutException {
       _log('predict - timeout for model "$modelId"');
-      return PredictionResult(
+      final result = PredictionResult(
         success: false,
         status: 'timeout',
         message: 'Request timed out after 5 seconds',
       );
+      
+      // Send latency data for timeout
+      if (_calculateLatency) {
+        _sendLatencyDataAsync(modelId, startTime, false, 'timeout');
+      }
+      
+      return result;
     } catch (error) {
       _log('predict - error for model "$modelId": $error');
       
+      PredictionResult result;
       if (error.toString().contains('SocketException') || 
           error.toString().contains('NetworkException')) {
-        return PredictionResult(
+        result = PredictionResult(
           success: false,
           status: 'network_error',
           message: 'Network error - please check your connection',
         );
+      } else {
+        result = PredictionResult(
+          success: false,
+          status: 'unknown_error',
+          message: 'An unexpected error occurred: ${error.toString()}',
+        );
       }
-
-      return PredictionResult(
-        success: false,
-        status: 'unknown_error',
-        message: 'An unexpected error occurred: ${error.toString()}',
-      );
+      
+      // Send latency data for error
+      if (_calculateLatency) {
+        _sendLatencyDataAsync(modelId, startTime, false, 'network_error');
+      }
+      
+      return result;
     }
   }
 
@@ -434,6 +519,44 @@ class MoveoOne {
   String _generateUUID() {
     final random = Random.secure();
     return List.generate(16, (_) => random.nextInt(256)).map((e) => e.toRadixString(16).padLeft(2, '0')).join();
+  }
+
+  // Send latency data asynchronously to Dolphin endpoint
+  void _sendLatencyDataAsync(String modelId, int startTime, bool success, String? errorType) {
+    // Run asynchronously without awaiting to not block the main response
+    Future.microtask(() async {
+      try {
+        final endTime = DateTime.now().millisecondsSinceEpoch;
+        final totalExecutionTime = endTime - startTime;
+        
+        final latencyData = {
+          'model_id': modelId,
+          'session_id': _sessionId,
+          'client': 'flutter', // As specified in requirements
+          'total_execution_time_ms': totalExecutionTime,
+          'latency_data': <String, dynamic>{}, // Empty for now as specified
+        };
+        
+        final uri = Uri.parse('${dolphinBaseUrl}/api/prediction-latency');
+        
+        final response = await http.post(
+          uri,
+          headers: {
+            'Authorization': _token,
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(latencyData),
+        );
+        
+        if (response.statusCode == 200) {
+          _log('Latency data sent successfully for model "$modelId"');
+        } else {
+          _log('Failed to send latency data: ${response.statusCode}');
+        }
+      } catch (e) {
+        _log('Error sending latency data: $e');
+      }
+    });
   }
 
   // Logging function
