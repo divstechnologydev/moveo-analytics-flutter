@@ -162,50 +162,29 @@ class MoveoOne {
     final startTime = DateTime.now().millisecondsSinceEpoch;
     // Validate model ID
     if (modelId.trim().isEmpty) {
-      final result = PredictionResult(
+      return PredictionResult(
         success: false,
         status: 'invalid_model_id',
         message: 'Model ID is required and must be a non-empty string',
       );
-      
-      // Send latency data for validation error
-      if (_calculateLatency) {
-        _sendLatencyDataAsync(modelId, startTime, false, 'validation_error');
-      }
-      
-      return result;
     }
 
     // Check if token is available
     if (_token.trim().isEmpty) {
-      final result = PredictionResult(
+      return PredictionResult(
         success: false,
         status: 'not_initialized',
         message: 'MoveoOne must be initialized with a valid token before using predict method',
       );
-      
-      // Send latency data for validation error
-      if (_calculateLatency) {
-        _sendLatencyDataAsync(modelId, startTime, false, 'validation_error');
-      }
-      
-      return result;
     }
 
     // Ensure session is started
     if (!_started || _sessionId.isEmpty) {
-      final result = PredictionResult(
+      return PredictionResult(
         success: false,
         status: 'no_session',
         message: 'Session must be started before making predictions. Call start() method first.',
       );
-      
-      // Send latency data for validation error
-      if (_calculateLatency) {
-        _sendLatencyDataAsync(modelId, startTime, false, 'validation_error');
-      }
-      
-      return result;
     }
     
     try {
