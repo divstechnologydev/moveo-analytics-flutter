@@ -159,7 +159,6 @@ MoveoOne().track(
     type: MoveoOneType.button,
     action: MoveoOneAction.tap,
     value: "Submit button clicked",
-    metadata: {},
   ),
 );
 ```
@@ -181,7 +180,6 @@ MoveoOne().tick(
     type: MoveoOneType.button,
     action: MoveoOneAction.appear,
     value: "primary_action",
-    metadata: {},
   ),
 );
 ```
