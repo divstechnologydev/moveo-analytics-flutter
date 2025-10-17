@@ -675,6 +675,15 @@ PredictionResult(
 )
 ```
 
+**Target Already Reached**
+```dart
+PredictionResult(
+  success: false,
+  status: 'target_already_reached',
+  message: 'Completion target already reached - prediction not applicable',
+)
+```
+
 **Server Error**
 ```dart
 PredictionResult(
