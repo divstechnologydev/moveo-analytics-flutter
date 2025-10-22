@@ -48,7 +48,7 @@ Add the Moveo One Analytics Flutter SDK to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  moveoone_flutter: ^0.0.14
+  moveoone_flutter: ^0.0.15
 ```
 
 Then, install the dependency:
