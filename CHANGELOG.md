@@ -1,3 +1,6 @@
+## 0.0.15
+Prediction api added
+
 ## 0.0.14
 Metadata optional in track/tick, identify method removed
 
