@@ -1,5 +1,6 @@
 
-const String libVersion = '0.0.11';
+const String libVersion = '0.0.15';
+const String dolphinBaseUrl = 'https://dolphin-prod-229920351162.europe-west1.run.app';
 
 // Environment Enum
 enum Environment {

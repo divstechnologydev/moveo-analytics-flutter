@@ -48,7 +48,7 @@ Add the Moveo One Analytics Flutter SDK to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  moveoone_flutter: ^0.0.14
+  moveoone_flutter: ^0.0.15
 ```
 
 Then, install the dependency:
@@ -159,7 +159,6 @@ MoveoOne().track(
     type: MoveoOneType.button,
     action: MoveoOneAction.tap,
     value: "Submit button clicked",
-    metadata: {},
   ),
 );
 ```
@@ -181,7 +180,6 @@ MoveoOne().tick(
     type: MoveoOneType.button,
     action: MoveoOneAction.appear,
     value: "primary_action",
-    metadata: {},
   ),
 );
 ```
@@ -539,6 +537,218 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 ```
+
+---
+
+## Prediction API
+
+The MoveoOne library includes a prediction method that allows you to get real-time predictions from your trained models using the current user's session data.
+
+### Basic Usage
+
+```dart
+// Make sure to start a session first
+MoveoOne().start("app_context", metadata: {
+  "version": "1.0.0",
+  "environment": "production"
+});
+
+// Get prediction from a model
+final result = await MoveoOne().predict("your-model-id");
+
+if (result.success) {
+  print("Prediction probability: ${result.predictionProbability}");
+  print("Binary result: ${result.predictionBinary}");
+} else {
+  print("Error: ${result.message}");
+}
+```
+
+### Latency Calculation
+
+The MoveoOne library automatically tracks prediction latency and sends performance data to the Dolphin service for monitoring and analytics. This feature is enabled by default but can be controlled programmatically.
+
+#### Enable/Disable Latency Tracking
+
+```dart
+// Enable latency calculation (default behavior)
+MoveoOne().calculateLatency(true);
+
+// Disable latency calculation
+MoveoOne().calculateLatency(false);
+```
+
+#### How It Works
+
+When latency calculation is enabled:
+1. **Start time tracking**: Records the timestamp when the prediction request begins
+2. **End time tracking**: Records the timestamp when the prediction response is received
+3. **Async reporting**: Sends latency data to `/api/prediction-latency` endpoint asynchronously after returning the prediction result
+4. **No performance impact**: The latency tracking runs in the background and doesn't affect the prediction response time
+
+### Prerequisites
+
+Before using the predict method, ensure:
+
+1. **Session is started**: Call `MoveoOne().start()` before making predictions
+2. **Valid token**: The MoveoOne instance must be initialized with a valid API token
+3. **Model access**: Your token must have access to the specified model
+
+### Method Signature
+
+```dart
+Future<PredictionResult> predict(String modelId)
+```
+
+**Parameters:**
+- `modelId` (String, required): The ID of the model to use for prediction
+
+**Returns:** Future that resolves to a PredictionResult object with the following properties:
+
+### Response Examples
+
+#### Successful Prediction
+
+```dart
+PredictionResult(
+  success: true,
+  status: 'success',
+  predictionProbability: 0.85,
+  predictionBinary: true,
+)
+```
+
+#### Pending Model Loading
+
+```dart
+PredictionResult(
+  success: false,
+  status: 'pending',
+  message: 'Model is loading',
+)
+```
+
+#### Error Responses
+
+**Invalid Model ID**
+```dart
+PredictionResult(
+  success: false,
+  status: 'invalid_model_id',
+  message: 'Model ID is required and must be a non-empty string',
+)
+```
+
+**Not Initialized**
+```dart
+PredictionResult(
+  success: false,
+  status: 'not_initialized',
+  message: 'MoveoOne must be initialized with a valid token before using predict method',
+)
+```
+
+**No Session Started**
+```dart
+PredictionResult(
+  success: false,
+  status: 'no_session',
+  message: 'Session must be started before making predictions. Call start() method first.',
+)
+```
+
+**Model Not Found**
+```dart
+PredictionResult(
+  success: false,
+  status: 'not_found',
+  message: 'Model not found or not accessible',
+)
+```
+
+**Conflict - Conditional Event Not Found**
+```dart
+PredictionResult(
+  success: false,
+  status: 'conflict',
+  message: 'Conditional event not found',
+)
+```
+
+**Target Already Reached**
+```dart
+PredictionResult(
+  success: false,
+  status: 'target_already_reached',
+  message: 'Completion target already reached - prediction not applicable',
+)
+```
+
+**Server Error**
+```dart
+PredictionResult(
+  success: false,
+  status: 'server_error',
+  message: 'Server error processing prediction request',
+)
+```
+
+**Network Error**
+```dart
+PredictionResult(
+  success: false,
+  status: 'network_error',
+  message: 'Network error - please check your connection',
+)
+```
+
+**Request Timeout**
+```dart
+PredictionResult(
+  success: false,
+  status: 'timeout',
+  message: 'Request timed out after 5 seconds',
+)
+```
+
+### Advanced Usage Example
+
+```dart
+Future<Map<String, dynamic>?> getPersonalizedRecommendations(String userId) async {
+  try {
+    final prediction = await MoveoOne().predict("recommendation-model-$userId");
+    
+    if (prediction.success) {
+      // Prediction completed successfully
+      if (prediction.predictionBinary) {
+        return {
+          "showRecommendations": true,
+          "confidence": prediction.predictionProbability
+        };
+      } else {
+        return {
+          "showRecommendations": false,
+          "reason": "Low confidence prediction"
+        };
+      }
+    } else {
+      // Handle all error states (including pending)
+      print("Prediction failed: ${prediction.message}");
+      return null;
+    }
+  } catch (error) {
+    print("Unexpected error during prediction: $error");
+    return null;
+  }
+}
+```
+
+### Notes
+
+- The `predict` method is **non-blocking** and won't affect your application's performance
+- All requests have a 5-second timeout to prevent hanging
+- The method automatically uses the current session ID from the MoveoOne instance
+- The method returns a Future, so you can use `async/await` or `.then()`
 
 ---
 
